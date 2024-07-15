@@ -17,17 +17,16 @@ void setup() {
   pinMode(8, INPUT_PULLUP); // Turn off radio pin on LoRa board, unused
   Ethernet.init(10); // CS pin
   
-  /* Serial testing */
   Serial.begin(9600);
 
-  QRCode qrcode; // QRCode structure
-   
-  // Allocate a chunk of memory to store the QR code
-  uint8_t qrcodeBytes[qrcode_getBufferSize()];
+  Ethernet.begin(mac); // No IP specified, makes unique IP
+  while(Ethernet.hardwareStatus() == EthernetNoHardware) {
+    Serial.println("Please connect an ethernet shield.");
+  }
 
-  qrcode_initText(&qrcode, qrcodeBytes, 3, ECC_LOW, "HELLO WORLD");
-  
-  
+  server.begin();
+  Serial.print("server is at ");
+  Serial.println(Ethernet.localIP());
 }
 
 void loop() {
