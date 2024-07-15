@@ -59,9 +59,12 @@ void loop() {
         client.println("<H1>QR Code Image Transfer<H1>");
         client.println("<P>Please scan the QR code below.</P>");
         String toSt = Ethernet.localIP().toString();
-        client.println("<div onload=generateQR(toSt)></div>");
+        client.println("<div id='qrcode'></div>");
 
-        client.println("<script src='../script.js'></script>");
+        client.println("<script>");
+        client.println("var qrcode = new QRCode('qrcode', 'http://" + toSt + "/')");
+        client.println("</script>");
+        
         client.println("</body>");
         client.println("</html>");
         break;
