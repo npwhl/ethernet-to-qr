@@ -1,5 +1,5 @@
-# ethernet-to-qr
-An experiment project intended to generate a qr code to transfer images on
+# Ethernet QR Image Service
+An experimental project intended to generate a qr code to transfer images on
 a unique, local web page. This project attempts to replicate the Nintendo
 Switch's current method of image transfering, which involves:
 
