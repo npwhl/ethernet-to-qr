@@ -6,30 +6,74 @@ byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
 };
 
-// Allocate a chunk of memory to store the QR code
-uint8_t qrcodeBytes[qrcode_getBufferSize()];
+// Backup IP address
+IPAddress ip(10, 0, 0, 162);
+IPAddress myDns(10, 0, 0, 162); 
 
-qrcode_initText(&qrcode, qrcodeBytes, 3, ECC_LOW, "HELLO WORLD");
+EthernetServer server(80); // Address for image host device
+EthernetServer server2(8080); // Address for transfer device
 
-EthernetServer server(80); // IP Address uses HTTP
+EthernetClient client; 
 
 void setup() {
   pinMode(8, INPUT_PULLUP); // Turn off radio pin on LoRa board, unused
   Ethernet.init(10); // CS pin
   
   Serial.begin(9600);
+  while(!Serial) {}
+  Serial.println("begin!");
 
-  Ethernet.begin(mac); // No IP specified, makes unique IP
+  if(Ethernet.begin(mac) == 0) { // In case DHCP doesn't work
+    Ethernet.begin(mac, ip, myDns);
+  }
   while(Ethernet.hardwareStatus() == EthernetNoHardware) {
     Serial.println("Please connect an ethernet shield.");
+    delay(1000);
+  }
+  while (Ethernet.linkStatus() == LinkOFF) {
+    Serial.println("Ethernet cable is not connected.");
+    delay(1000);
   }
 
   server.begin();
-  Serial.print("server is at ");
-  Serial.println(Ethernet.localIP());
+  server2.begin();
+  Serial.print("Please access: ");
+  Serial.print(Ethernet.localIP());
+  Serial.println(" in your web browser.");
+  
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  EthernetClient client = server.available(); // Webpage with QR codes to scan
+  EthernetClient client2 = server.available(); // Webpage that the user sees on the transfer device
+  if(client) {
+    while(client.connected()) {
+      if(client.available()) {
+        client.println("<!DOCTYPE HTML>");
+        client.println("<html lang='en'>");
+        client.println("<head>");
+        client.println("<script src= 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'> </script> ");
+        client.println("</head>");
+        
+        client.println("<body>");
+        client.println("<H1>QR Code Image Transfer<H1>");
+        client.println("<P>Please scan the QR code below.</P>");
+        String toSt = Ethernet.localIP().toString();
+        client.println("<div onload=generateQR(toSt)></div>");
 
+        client.println("<script src='../script.js'></script>");
+        client.println("</body>");
+        client.println("</html>");
+        break;
+      }
+
+      break;
+      }
+    }
+    // give the web browser time to receive the data
+    delay(1);
+    // close the connection:
+    client.stop();
+    Serial.println("client disconnected");
+    delay(5000);
 }
