@@ -10,9 +10,8 @@ Switch's current method of image transfering, which involves:
 
 I would like this project to work without the image host device having to 
 connect to the internet, since the process on the Nintendo Switch only requires 
-internet connectivity on the smartphone. So, the QR code generated in Step 1 
-needs to pull the usable IP address range from the transfer device to be used
-with the Adafruit board and Ethernet shield in step 2. 
+internet connectivity on the smartphone. So, the image host device needs to host
+its own IP address and send it to the transfer device to connect to. 
 
 In the future, I would like this project to work without an Arduino. For example, 
 I would like to have this project work on the Nintendo DS to give it a way to 
