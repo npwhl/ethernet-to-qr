@@ -45,29 +45,30 @@ void setup() {
 
 void loop() {
   EthernetClient client = server.available(); // Webpage with QR codes to scan
-  EthernetClient client2 = server.available(); // Webpage that the user sees on the transfer device
+  EthernetClient client2 = server2.available(); // Webpage that the user sees on the transfer device
   if(client) {
     while(client.connected()) {
       if(client.available()) {
         client.println("<!DOCTYPE HTML>");
         client.println("<html lang='en'>");
         client.println("<head>");
+        //client.println("<link rel='stylesheet' href='css/style.css'>");
         client.println("<script src= 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'> </script> ");
         client.println("</head>");
         
         client.println("<body>");
-        client.println("<H1>QR Code Image Transfer<H1>");
+        client.println("<H1 class='title' style='text-align: center'>QR Code Image Transfer<H1>");
         client.println("<P>Please scan the QR code below.</P>");
         String toSt = Ethernet.localIP().toString();
         client.println("<div id='qrcode'></div>");
 
         client.println("<script>");
-        client.println("var qrcode = new QRCode('qrcode', 'http://" + toSt + "/')");
+        client.println("var qrcode = new QRCode('qrcode', 'http://" + toSt + ":8080/')");
         client.println("</script>");
         
         client.println("</body>");
         client.println("</html>");
-        break;
+        
       }
 
       break;
@@ -78,5 +79,14 @@ void loop() {
     // close the connection:
     client.stop();
     Serial.println("client disconnected");
+        if(client2) {
+          while(client2.connected()) {
+            if(client2.available()) {
+              client2.println("HI!");
+              delay(10);
+            }
+          }
+        }
+     
     delay(5000);
 }
