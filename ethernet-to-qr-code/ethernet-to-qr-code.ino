@@ -1,6 +1,6 @@
 #include <SPI.h>
 #include <Ethernet.h>
-#include "html-format.h"
+#include "index.h"
 
 // Unique MAC address to create an IP address from
 byte mac[] = {
@@ -50,6 +50,7 @@ void loop() {
   if(client) {
     while(client.connected()) {
       if(client.available()) {
+        String toSt = Ethernet.localIP().toString();
         client.println(index_html);
         //client.println("<html>Test</html>");
       }
