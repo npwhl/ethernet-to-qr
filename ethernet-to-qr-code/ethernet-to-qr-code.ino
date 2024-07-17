@@ -1,5 +1,6 @@
 #include <SPI.h>
 #include <Ethernet.h>
+#include "html-format.h"
 
 // Unique MAC address to create an IP address from
 byte mac[] = {
@@ -7,8 +8,8 @@ byte mac[] = {
 };
 
 // Backup IP address
-IPAddress ip(10, 0, 0, 162);
-IPAddress myDns(10, 0, 0, 162); 
+IPAddress ip(10, 0, 0, 155);
+IPAddress myDns(10, 0, 0, 155); 
 
 EthernetServer server(80); // Address for image host device
 EthernetServer server2(8080); // Address for transfer device
@@ -49,26 +50,8 @@ void loop() {
   if(client) {
     while(client.connected()) {
       if(client.available()) {
-        client.println("<!DOCTYPE HTML>");
-        client.println("<html lang='en'>");
-        client.println("<head>");
-        //client.println("<link rel='stylesheet' href='css/style.css'>");
-        client.println("<script src= 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'> </script> ");
-        client.println("</head>");
-        
-        client.println("<body>");
-        client.println("<H1 class='title' style='text-align: center'>QR Code Image Transfer<H1>");
-        client.println("<P>Please scan the QR code below.</P>");
-        String toSt = Ethernet.localIP().toString();
-        client.println("<div id='qrcode'></div>");
-
-        client.println("<script>");
-        client.println("var qrcode = new QRCode('qrcode', 'http://" + toSt + ":8080/')");
-        client.println("</script>");
-        
-        client.println("</body>");
-        client.println("</html>");
-        
+        client.println(index_html);
+        //client.println("<html>Test</html>");
       }
 
       break;
@@ -89,4 +72,8 @@ void loop() {
         }
      
     delay(5000);
+}
+
+void readHTML() {
+  
 }
