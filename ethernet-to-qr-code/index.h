@@ -9,6 +9,12 @@ const char index_html[] PROGMEM = R"rawliteral(
                 text-align: center;
             }
 
+            #qrcode {
+                display: flex; 
+                justify-content: center;
+                align-items: center;
+            }
+
         </style>
     </head>
 
@@ -17,8 +23,10 @@ const char index_html[] PROGMEM = R"rawliteral(
             <h1 style>QR Code Image Transfer</h1>
             <p>Please scan the QR code below.</p>
         </div>
-
+        
         <div id='qrcode'></div>
-        <script var qrcode = new QRCode('qrcode', 'http://" + toSt + "/></script>
+        )rawliteral";
+
+const char index_html2[] PROGMEM = R"rawliteral(
     </body>
 </html>)rawliteral";

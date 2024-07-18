@@ -51,7 +51,9 @@ void loop() {
     while(client.connected()) {
       if(client.available()) {
         String toSt = Ethernet.localIP().toString();
-        client.println(index_html);
+        client.print(index_html);
+        client.println("<script>var qrcode = new QRCode('qrcode', 'http://" + toSt + "/')</script>");
+        client.println(index_html2);
         //client.println("<html>Test</html>");
       }
 
